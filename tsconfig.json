@@ -1,0 +1,24 @@
+{
+  "extends": "@tsconfig/node23/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./*"],
+      "@configs/*": ["configs/*"],
+      "@constants/*": ["constants/*"],
+      "@lib/*": ["lib/*"],
+      "@middlewares": ["middlewares/*"],
+      "@models/*": ["models/*"],
+      "@routes/*": ["routes/*"],
+      "@scripts/*": ["scripts/*"],
+      "@tests": ["tests/*"],
+      "@types/*": ["types/*"],
+      "@utils/*": ["utils/*"],
+      "@validators": ["validators/*"]
+    }
+  },
+  "exclude": ["node_modules"],
+  "include": ["src/**/*.mts"]
+}
