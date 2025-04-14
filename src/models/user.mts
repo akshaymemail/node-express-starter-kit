@@ -9,28 +9,31 @@ interface User extends Document {
 }
 
 // Create the Mongoose schema
-const UserSchema = new Schema<User>({
-  first_name: {
-    type: String,
-    required: true,
-    trim: true,
+const UserSchema = new Schema<User>(
+  {
+    first_name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    last_name: {
+      type: String,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  last_name: {
-    type: String,
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    lowercase: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-})
+  { timestamps: true }
+)
 
 // Create the Mongoose model
 const UserModel = model<User>("User", UserSchema)

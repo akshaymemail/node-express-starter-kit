@@ -3,14 +3,15 @@ import HttpResponse from "@utils/response.mts"
 import BcryptService from "@lib/bcrypt.mts"
 import JWTService from "@lib/jwt.mts"
 import UserModel from "@models/user.mts"
+import MESSAGES from "@/intl/main.mts"
 
 class AuthControllers {
   // user login
-  public async login(req: Request, res: Response): Promise<void> {
+  public async signin(req: Request, res: Response): Promise<void> {
     // Your login logic here
     //find user in db
-    const { email, username, password } = req.body
-    const foundUser = await UserModel.findOne({ email: email })
+    const { email, password } = req.body
+    const foundUser = await UserModel.findOne({ email: email }).lean()
     if (foundUser) {
       // user exist
       // verify password
@@ -24,21 +25,17 @@ class AuthControllers {
         const token = JWTService.signToken({
           first_name: foundUser.first_name,
           last_name: foundUser.last_name,
-          email: foundUser.email,
-          _id: foundUser._id as string,
+          id: foundUser._id as string,
         })
         HttpResponse.ok(res, { token })
       } else {
         // password is incorrect
         // inform user username or password is incorrect
-        HttpResponse.badRequest(
-          res,
-          "Either username or password is incorrect!"
-        )
+        HttpResponse.badRequest(res, MESSAGES.USER.INCORRECT_CREDENTIALS)
       }
     } else {
       // user doesn't exist
-      HttpResponse.badRequest(res, `User doesn't exist`, {})
+      HttpResponse.badRequest(res, MESSAGES.USER.USER_NOT_FOUND)
     }
   }
 
@@ -49,32 +46,12 @@ class AuthControllers {
     try {
       const hashedPassword = await BcryptService.hashPassword(body.password)
       const newUser = new UserModel({ ...body, password: hashedPassword })
-      const userDoc = await newUser.save()
+      await newUser.save()
       HttpResponse.ok(res, {
-        message: "Registraction completed! Please login now",
+        message: MESSAGES.USER.REGISTRATION_COMPLETED,
       })
     } catch (error) {
-      console.log(error)
-      HttpResponse.internalServerError(res, "", error)
-    }
-  }
-
-  // check if username exist or not
-  public async usernameStatus(req: Request, res: Response) {
-    const { username } = req.body
-    try {
-      const user = await UserModel.findOne({ username: username })
-      console.log(user)
-      if (user) {
-        HttpResponse.badRequest(res, "username already exist!")
-      } else {
-        HttpResponse.ok(res, "username available!")
-      }
-    } catch (error) {
-      HttpResponse.internalServerError(
-        res,
-        "Something went wrong, Please try again later!"
-      )
+      HttpResponse.internalServerError(res, error)
     }
   }
 }

@@ -8,6 +8,7 @@
       "@/*": ["./*"],
       "@configs/*": ["configs/*"],
       "@constants/*": ["constants/*"],
+      "@intl/*": ["intl/*"],
       "@lib/*": ["lib/*"],
       "@middlewares": ["middlewares/*"],
       "@models/*": ["models/*"],

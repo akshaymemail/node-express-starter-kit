@@ -1,31 +1,30 @@
 import { Request, Response } from "express"
 import HttpResponse from "@utils/response.mts"
-import { UserPayload } from "@/types/main.mts"
+import { UserPayload } from "@/types/main.mjs"
 import UserModel from "@models/user.mts"
+import MESSAGES from "@/intl/main.mjs"
 
 interface AuthRequest extends Request {
   user?: UserPayload
 }
-class userControllers {
+class userController {
   public async getProfile(req: AuthRequest, res: Response): Promise<void> {
     //find user
-    const foundUser = await UserModel.findOne({ email: req.user?.email })
-    if (foundUser) {
-      // user found
-      HttpResponse.ok(res, {
-        _id: foundUser._id,
-        first_name: foundUser.first_name,
-        last_name: foundUser.last_name,
-        email: foundUser.email,
-      })
-    } else {
-      // something went wrong, user not found
-      HttpResponse.badRequest(
-        res,
-        "Something went wrong, please try again later."
-      )
+    try {
+      const foundUser = await UserModel.findById(req.user?.id)
+        .select("-password -v")
+        .lean()
+      if (foundUser) {
+        // user found
+        HttpResponse.ok(res, foundUser)
+      } else {
+        // something went wrong, user not found
+        HttpResponse.badRequest(res, MESSAGES.USER.PORFILE_DETAILS_NOT_FOUND)
+      }
+    } catch (error) {
+      HttpResponse.internalServerError(res)
     }
   }
 }
 
-export default userControllers
+export default userController

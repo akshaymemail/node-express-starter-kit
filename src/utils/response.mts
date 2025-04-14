@@ -1,5 +1,8 @@
 import { Response } from "express"
 import logger from "@lib/logger.mts" // Import the logger
+import MESSAGES from "@/intl/main.mts"
+
+const { ERROR, SUCCESS } = MESSAGES
 
 // Interfaces for type safety
 interface ErrorResponse {
@@ -12,6 +15,7 @@ interface ErrorResponse {
 
 interface SuccessResponse<T> {
   success: true
+  message: string
   data: T
 }
 
@@ -44,24 +48,40 @@ class HttpResponse {
   }
 
   // Private method for success handling
-  private static success<T>(res: Response, data: T): void {
+  private static success<T>(
+    res: Response,
+    statusCode: number,
+    data: T,
+    message: string
+  ): void {
     const successResponse: SuccessResponse<T> = {
       success: true,
+      message,
       data,
     }
-
-    res.status(200).json(successResponse)
+    res.status(statusCode).json(successResponse)
   }
 
   // Public helper for success responses
-  public static ok<T>(res: Response, data: T): void {
-    this.success(res, data)
+  public static ok<T>(
+    res: Response,
+    data: T,
+    message = SUCCESS.OPERATION_SUCCESS
+  ): void {
+    this.success(res, 200, data, message)
+  }
+  public static created<T>(
+    res: Response,
+    data: T,
+    message = SUCCESS.REQUEST_CREATED
+  ): void {
+    this.success(res, 201, data, message)
   }
 
   // Public helpers for common error status codes
   public static badRequest(
     res: Response,
-    message = "Bad Request",
+    message = ERROR.BAD_REQUEST,
     details?: any
   ): void {
     this.error(res, 400, message, details)
@@ -69,15 +89,15 @@ class HttpResponse {
 
   public static unauthorized(
     res: Response,
-    message = "Unauthorized",
-    details?: any
+    details?: any,
+    message = ERROR.UNAUTHORIZED
   ): void {
     this.error(res, 401, message, details)
   }
 
   public static notFound(
     res: Response,
-    message = "Not Found",
+    message = ERROR.NOT_FOUND,
     details?: any
   ): void {
     this.error(res, 404, message, details)
@@ -85,8 +105,8 @@ class HttpResponse {
 
   public static internalServerError(
     res: Response,
-    message = "Internal Server Error",
-    details?: any
+    details?: any,
+    message = ERROR.INTERNAL_SERVER_ERROR
   ): void {
     this.error(res, 500, message, details)
   }

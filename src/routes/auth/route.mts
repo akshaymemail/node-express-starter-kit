@@ -10,9 +10,9 @@ const authRoutes = express.Router()
 const controllers = new AuthControllers()
 
 // auth routes
-authRoutes.post("/login", AuthValidators.login, validate, controllers.login)
+authRoutes.post("/signin", AuthValidators.login, validate, controllers.signin)
 authRoutes.post(
-  "/register",
+  "/signup",
   AuthValidators.signup,
   validate,
   controllers.register
