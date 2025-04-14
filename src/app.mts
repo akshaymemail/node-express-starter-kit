@@ -1,7 +1,9 @@
-import AppConfig from "@/configs/main.mts"
+import AppConfig from "@/configs/app.mjs"
 import express from "express"
 import routes from "@routes/main.mts"
 import MongooseService from "@lib/dbClient.mts"
+import cors from "cors"
+import corsConfig from "./configs/cors.mts"
 
 const { PORT, PREFIX } = AppConfig
 
@@ -17,6 +19,7 @@ const mongooseService = MongooseService.getInstance()
     const app = express()
 
     // Middleware
+    app.use(cors(corsConfig)) // configure cors config file as per requirement
     app.use(express.json())
 
     // Health check endpoint

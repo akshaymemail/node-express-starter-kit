@@ -1,28 +1,25 @@
 import { NextFunction, Request, Response } from "express"
-
 import JWT from "jsonwebtoken"
 import HttpResponse from "@utils/response.mts"
-import { UserPayload } from "@/types/main.mts"
+import { AuthRequest, UserPayload } from "@/types/main.mjs"
+import JWTConfig from "@/configs/jwt.mts"
+import MESSAGES from "@/intl/main.mts"
 
-interface AuthRequest extends Request {
-  user: UserPayload
-}
+const { ERROR } = MESSAGES
 
 class JWTService {
   public static signToken(payload: UserPayload): string {
-    const token = JWT.sign(payload, process.env.JWT_SECRET || "default")
+    const token = JWT.sign(payload, JWTConfig.SECRET, {
+      expiresIn: JWTConfig.EXPIRES_IN,
+    })
     return token
   }
 
   public static verifyToken(token: string): UserPayload | null {
     try {
-      const decoded = JWT.verify(
-        token,
-        process.env.JWT_SECRET || "default"
-      ) as UserPayload
+      const decoded = JWT.verify(token, JWTConfig.SECRET) as UserPayload
       return decoded
     } catch (error) {
-      console.error("JWT Verification Error:", error)
       return null // Return null if the token is invalid or expired
     }
   }
@@ -33,7 +30,6 @@ class JWTService {
       // authorization header found
       try {
         const token = authorization.split(" ")[1]
-
         if (token) {
           // token found, now verify the token
           const user = JWTService.verifyToken(token)
@@ -41,18 +37,18 @@ class JWTService {
             authReq.user = user
             next()
           } else {
-            HttpResponse.unauthorized(res, "Invalid or expired token")
+            HttpResponse.unauthorized(res, ERROR.INVALID_OR_EXPIRED_TOKEN)
           }
         } else {
-          HttpResponse.unauthorized(res, "Invalid token provided")
+          HttpResponse.unauthorized(res, ERROR.INVALID_TOKEN_PROVIDED)
         }
       } catch (error) {
         console.warn(error)
-        HttpResponse.internalServerError(res, "Internal server error!", error)
+        HttpResponse.internalServerError(res, error)
       }
     } else {
       // no token attached
-      HttpResponse.unauthorized(res, "No token provided")
+      HttpResponse.unauthorized(res, ERROR.NO_TOKEN_PROVIDED)
     }
   }
 }

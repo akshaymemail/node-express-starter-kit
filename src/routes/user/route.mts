@@ -1,5 +1,5 @@
 import express from "express"
-import userControllers from "./controller.mts"
+import userController from "./controller.mts"
 import JWTService from "@lib/jwt.mts"
 
 // express router
@@ -9,7 +9,7 @@ const userRoutes = express.Router()
 userRoutes.use(JWTService.isAuth)
 
 // user controller instance
-const controllers = new userControllers()
+const controllers = new userController()
 
 // user routes
 userRoutes.get("/profile", controllers.getProfile)
