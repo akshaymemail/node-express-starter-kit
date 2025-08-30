@@ -1,4 +1,11 @@
-import "dotenv/config" // Automatically loads environment variables
+import dotenv from "dotenv"
+const envFile = `.env.${process.env.NODE_ENV}`
+if (!envFile) {
+  throw new Error("Environment file is not set.")
+}
+dotenv.config({
+  path: envFile,
+})
 
 import("./src/app.mts")
   .then((res) => {

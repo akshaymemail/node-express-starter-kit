@@ -6,8 +6,11 @@ class MongooseService {
 
   private constructor() {
     // Private constructor for Singleton pattern
-    this.dbUri =
-      process.env.MONGODB_URI || "mongodb://localhost:27017/myDatabase" // Default URI
+    const uri = process.env.MONGODB_URI
+    if (!uri) {
+      throw new Error("MONGODB_URI environment variable is not set.")
+    }
+    this.dbUri = uri
   }
 
   // Singleton instance method

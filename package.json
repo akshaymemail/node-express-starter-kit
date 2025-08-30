@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node --import=tsx src/app.mts",
-    "build": "tsc",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "staging": "cross-env NODE_ENV=staging node --import=tsx entry.mts",
+    "production": "cross-env NODE_ENV=production node --import=tsx entry.mts"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +27,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
-    "@types/jsonwebtoken": "^9.0.9"
+    "@types/jsonwebtoken": "^9.0.9",
+    "cross-env": "^10.0.0"
   }
 }
