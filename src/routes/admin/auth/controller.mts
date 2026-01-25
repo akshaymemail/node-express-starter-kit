@@ -1,9 +1,10 @@
 import { Request, Response } from "express"
-import HttpResponse from "@utils/response.mts"
-import BcryptService from "@lib/bcrypt.mts"
-import JWTService from "@lib/jwt.mts"
-import UserModel from "@models/user.mts"
-import MESSAGES from "@/intl/main.mts"
+import HttpResponse from "~/utils/response.mts"
+import BcryptService from "~/lib/bcrypt.mts"
+import JWTService from "~/lib/jwt.mts"
+import UserModel from "~/models/user.mts"
+import MESSAGES from "~/intl/main.mts"
+import { Types } from "mongoose"
 
 class AuthControllers {
   // user login
@@ -25,7 +26,7 @@ class AuthControllers {
         const token = JWTService.signToken({
           first_name: foundUser.first_name,
           last_name: foundUser.last_name,
-          id: foundUser._id as string,
+          id: new Types.ObjectId(foundUser._id),
         })
         HttpResponse.ok(res, { token })
       } else {

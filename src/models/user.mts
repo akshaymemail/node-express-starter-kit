@@ -2,6 +2,7 @@ import { Schema, model, Document } from "mongoose"
 
 // Define a TypeScript interface for your document
 interface User extends Document {
+  org_name: string
   first_name: string
   last_name: string
   email: string
@@ -11,6 +12,11 @@ interface User extends Document {
 // Create the Mongoose schema
 const UserSchema = new Schema<User>(
   {
+    org_name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     first_name: {
       type: String,
       required: true,

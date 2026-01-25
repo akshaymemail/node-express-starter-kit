@@ -1,9 +1,9 @@
-import AppConfig from "@/configs/app.mjs"
+import AppConfig from "~/configs/app.mts"
 import express from "express"
-import routes from "@routes/main.mts"
-import MongooseService from "@lib/dbClient.mts"
+import MongooseService from "~/lib/dbClient.mts"
 import cors from "cors"
-import corsConfig from "./configs/cors.mts"
+import corsConfig from "~/configs/cors.mts"
+import modules from "~/routes/main.mts"
 
 const { PORT, PREFIX } = AppConfig
 
@@ -30,10 +30,13 @@ const mongooseService = MongooseService.getInstance()
     })
 
     // Map all app routes (v1)
-    Object.entries(routes).map(([name, router]) => {
-      const path = `${PREFIX.V1}/${name}`
-      app.use(path, router)
-      console.log("Resolved routes - ", path)
+    modules.forEach((module) => {
+      const modulePath = `${PREFIX.V1}${module.path}`
+      module.routes.forEach((route) => {
+        const path = `${modulePath}${route.path}`
+        console.log(`Registering: [${module.name}] -> ${path}`)
+        app.use(path, route.router)
+      })
     })
 
     // Start the server

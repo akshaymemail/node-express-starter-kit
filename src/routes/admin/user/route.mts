@@ -1,6 +1,6 @@
 import express from "express"
 import userController from "./controller.mts"
-import JWTService from "@lib/jwt.mts"
+import JWTService from "~/lib/jwt.mts"
 
 // express router
 const userRoutes = express.Router()

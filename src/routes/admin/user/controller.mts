@@ -1,8 +1,8 @@
 import { Request, Response } from "express"
-import HttpResponse from "@utils/response.mts"
-import { UserPayload } from "@/types/main.mjs"
-import UserModel from "@models/user.mts"
-import MESSAGES from "@/intl/main.mjs"
+import HttpResponse from "~/utils/response.mts"
+import { UserPayload } from "~/types/main.mts"
+import UserModel from "~/models/user.mts"
+import MESSAGES from "~/intl/main.mts"
 
 interface AuthRequest extends Request {
   user?: UserPayload

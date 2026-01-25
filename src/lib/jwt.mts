@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
 import JWT from "jsonwebtoken"
-import HttpResponse from "@utils/response.mts"
-import { AuthRequest, UserPayload } from "@/types/main.mjs"
-import JWTConfig from "@/configs/jwt.mts"
-import MESSAGES from "@/intl/main.mts"
+import HttpResponse from "~/utils/response.mts"
+import { AuthRequest, UserPayload } from "~/types/main.mts"
+import JWTConfig from "~/configs/jwt.mts"
+import MESSAGES from "~/intl/main.mts"
 
 const { ERROR } = MESSAGES
 

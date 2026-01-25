@@ -1,7 +1,7 @@
 import express from "express"
+import AuthValidators from "~/validators/auth.mts"
+import validate from "~/lib/validator.mts"
 import AuthControllers from "./controller.mts"
-import AuthValidators from "@/validators/auth.mts"
-import validate from "@/lib/validator.mts"
 
 // express router for auth
 const authRoutes = express.Router()

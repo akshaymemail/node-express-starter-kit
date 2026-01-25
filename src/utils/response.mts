@@ -1,6 +1,6 @@
 import { Response } from "express"
-import logger from "@lib/logger.mts" // Import the logger
-import MESSAGES from "@/intl/main.mts"
+import logger from "~/lib/logger.mts" // Import the logger
+import MESSAGES from "~/intl/main.mts"
 
 const { ERROR, SUCCESS } = MESSAGES
 
